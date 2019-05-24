@@ -43,13 +43,6 @@
         />
 
     <!--Button:   Launch existing email clients to send email-->
-    <Button
-        android:id="@+id/sendEmailBtn"
-
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end"
-        android:text="send Email" />
 
     <Button
         android:id="@+id/mic_button"

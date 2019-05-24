@@ -50,10 +50,8 @@ class MainActivity : AppCompatActivity()  {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        sendButton = findViewById<Button>(R.id.sendEmailBtn).apply {
-
-        //Adding click listener
-        setOnClickListener(sendClickListener)}
+        //sendButton = findViewById<Button>(R.id.sendEmailBtn).apply {
+        //setOnClickListener(sendClickListener)}
 
         recipient = findViewById(R.id.recipientEt)
         subject = findViewById(R.id.subjectEt)
@@ -123,6 +121,8 @@ class MainActivity : AppCompatActivity()  {
             speechRecognizermessage.stopListening()
         } else {
             speechRecognizermessage.startListening()
+            micButton = findViewById<Button>(R.id.mic_button).apply {
+                setOnClickListener(sendClickListener)}
 
         }
 
