@@ -25,7 +25,7 @@ import android.view.View
 import android.view.View.OnClickListener
 import java.util.Arrays
 import android.R.attr.button
-
+import android.widget.Toast
 
 
 @Suppress("NAME_SHADOWING")
@@ -43,6 +43,7 @@ class MainActivity : AppCompatActivity()  {
     private lateinit var sendButton: Button
     private lateinit var micSubject: Button
     private lateinit var micMessage: Button
+    private var detectListener:String="micClickListener"
 
 
 
@@ -72,23 +73,25 @@ class MainActivity : AppCompatActivity()  {
         setupSpeechViewModel()
         setupSpeechViewSubject()
         setupSpeechViewMessage()
+
         micButton.setOnLongClickListener(View.OnLongClickListener {
-            if (!speechRecognizerViewModel.permissionToRecordAudio) {
-                ActivityCompat.requestPermissions(this, permissions, REQUEST_RECORD_AUDIO_PERMISSION)
-            }
-
-            if (speechRecognizerViewModel.isListening) {
-                speechRecognizerViewModel.stopListening()
-
-
-            } else {
-                speechRecognizerViewModel.startListening()
+            if(detectListener.equals("micClickListenerSubject")){
+                detectListener="micClickListener"
+                micButton = findViewById<Button>(R.id.mic_button).apply {
+                    setOnClickListener(micClickListener)
+                }
+            }else if(detectListener.equals("micClickListenerMessage")){
+                detectListener="micClickListenerSubject"
                 micButton = findViewById<Button>(R.id.mic_button).apply {
                     setOnClickListener(micClickListenerSubject)
                 }
-
-
+            }else if(detectListener.equals("sendClickListener")){
+                detectListener="micClickListenerMessage"
+                micButton = findViewById<Button>(R.id.mic_button).apply {
+                    setOnClickListener(micClickListenerMessage)
+                }
             }
+            Toast.makeText(this, "RESET", Toast.LENGTH_SHORT).show()
             false
         })
 
@@ -117,6 +120,7 @@ class MainActivity : AppCompatActivity()  {
             micButton = findViewById<Button>(R.id.mic_button).apply {
                 setOnClickListener(micClickListenerSubject)
             }
+            detectListener="micClickListenerSubject"
 
         }
 
@@ -141,6 +145,7 @@ class MainActivity : AppCompatActivity()  {
                 setOnClickListener(micClickListenerMessage)
             }
 
+            detectListener="micClickListenerMessage"
 
         }
 
@@ -160,6 +165,9 @@ class MainActivity : AppCompatActivity()  {
             vibratorService.vibrate(100) // Using deprecated API because min sdk 21
             micButton = findViewById<Button>(R.id.mic_button).apply {
                 setOnClickListener(sendClickListener)}
+
+            detectListener="sendClickListener"
+
 
         }
 
