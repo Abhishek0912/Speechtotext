@@ -22,6 +22,9 @@ import android.widget.TextView
 import android.view.View
 import android.view.View.OnClickListener
 import java.util.Arrays
+import android.R.attr.button
+
+
 
 
 @Suppress("NAME_SHADOWING")
@@ -50,7 +53,7 @@ class MainActivity : AppCompatActivity()  {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        //sendButton = findViewById<Button>(R.id.sendEmailBtn).apply {
+       // sendButton = findViewById<Button>(R.id.sendEmailBtn).apply {
         //setOnClickListener(sendClickListener)}
 
         recipient = findViewById(R.id.recipientEt)
@@ -59,6 +62,8 @@ class MainActivity : AppCompatActivity()  {
         micButton = findViewById<Button>(R.id.mic_button).apply {
             setOnClickListener(micClickListener)
         }
+
+
         // micSubject = findViewById<Button>(R.id.mic_subject).apply {
         //   setOnClickListener(micClickListenerSubject)}
         // micMessage = findViewById<Button>(R.id.mic_message).apply {
@@ -66,9 +71,30 @@ class MainActivity : AppCompatActivity()  {
         setupSpeechViewModel()
         setupSpeechViewSubject()
         setupSpeechViewMessage()
+        micButton.setOnLongClickListener(View.OnLongClickListener {
+            if (!speechRecognizerViewModel.permissionToRecordAudio) {
+                ActivityCompat.requestPermissions(this, permissions, REQUEST_RECORD_AUDIO_PERMISSION)
+            }
+
+            if (speechRecognizerViewModel.isListening) {
+                speechRecognizerViewModel.stopListening()
+
+
+            } else {
+                speechRecognizerViewModel.startListening()
+                micButton = findViewById<Button>(R.id.mic_button).apply {
+                    setOnClickListener(micClickListenerSubject)
+                }
+
+
+            }
+            false
+        })
 
 
     }
+
+
     private val sendClickListener= View.OnClickListener {
         sendEmail()
     }
@@ -91,6 +117,8 @@ class MainActivity : AppCompatActivity()  {
 
 
     }
+
+
 
     private val micClickListenerSubject = View.OnClickListener {
         if (!speechRecognizersubject.permissionToRecordAudio) {
