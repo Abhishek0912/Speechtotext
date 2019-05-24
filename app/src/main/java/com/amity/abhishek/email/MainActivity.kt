@@ -12,17 +12,18 @@ import java.util.*
 import android.support.v4.content.ContextCompat.startActivity
 import android.R.attr.name
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Context
 import android.content.pm.ResolveInfo
 import android.content.pm.PackageManager
 import android.os.IBinder
 import android.os.Message
+import android.os.Vibrator
 import android.support.v4.app.ActivityCompat
 import android.widget.Button
 import android.widget.TextView
 import android.view.View
 import android.view.View.OnClickListener
 import java.util.Arrays
-
 
 @Suppress("NAME_SHADOWING")
 class MainActivity : AppCompatActivity()  {
@@ -70,6 +71,8 @@ class MainActivity : AppCompatActivity()  {
 
     }
     private val sendClickListener= View.OnClickListener {
+        val vibratorService = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        vibratorService.vibrate(500) // Using deprecated API because min sdk 21
         sendEmail()
     }
 
@@ -83,6 +86,8 @@ class MainActivity : AppCompatActivity()  {
             speechRecognizerViewModel.stopListening()
         } else {
             speechRecognizerViewModel.startListening()
+            val vibratorService = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+            vibratorService.vibrate(100) // Using deprecated API because min sdk 21
             micButton = findViewById<Button>(R.id.mic_button).apply {
                 setOnClickListener(micClickListenerSubject)
             }
@@ -102,6 +107,8 @@ class MainActivity : AppCompatActivity()  {
             speechRecognizersubject.stopListening()
         } else {
             speechRecognizersubject.startListening()
+            val vibratorService = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+            vibratorService.vibrate(100) // Using deprecated API because min sdk 21
             micButton = findViewById<Button>(R.id.mic_button).apply {
                 setOnClickListener(micClickListenerMessage)
             }
@@ -121,6 +128,8 @@ class MainActivity : AppCompatActivity()  {
             speechRecognizermessage.stopListening()
         } else {
             speechRecognizermessage.startListening()
+            val vibratorService = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+            vibratorService.vibrate(100) // Using deprecated API because min sdk 21
             micButton = findViewById<Button>(R.id.mic_button).apply {
                 setOnClickListener(sendClickListener)}
 
