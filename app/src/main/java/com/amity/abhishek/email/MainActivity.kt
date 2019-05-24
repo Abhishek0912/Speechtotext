@@ -29,7 +29,7 @@ import android.widget.Toast
 
 
 @Suppress("NAME_SHADOWING")
-class MainActivity : AppCompatActivity()  {
+class MainActivity : AppCompatActivity() {
     private val REQUEST_RECORD_AUDIO_PERMISSION = 200
     private val REQUEST_RECORD_AUDIO_SUBJECT_PERMISSION = 200
     private val REQUEST_RECORD_AUDIO_MESSAGE_PERMISSION = 200
@@ -43,8 +43,7 @@ class MainActivity : AppCompatActivity()  {
     private lateinit var sendButton: Button
     private lateinit var micSubject: Button
     private lateinit var micMessage: Button
-    private var detectListener:String="micClickListener"
-
+    private var detectListener: String = "micClickListener"
 
 
     private lateinit var speechRecognizerViewModel: SpeechRecognizerViewModel
@@ -55,7 +54,7 @@ class MainActivity : AppCompatActivity()  {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-       // sendButton = findViewById<Button>(R.id.sendEmailBtn).apply {
+        // sendButton = findViewById<Button>(R.id.sendEmailBtn).apply {
         //setOnClickListener(sendClickListener)}
 
         recipient = findViewById(R.id.recipientEt)
@@ -75,18 +74,18 @@ class MainActivity : AppCompatActivity()  {
         setupSpeechViewMessage()
 
         micButton.setOnLongClickListener(View.OnLongClickListener {
-            if(detectListener.equals("micClickListenerSubject")){
-                detectListener="micClickListener"
+            if (detectListener.equals("micClickListenerSubject")) {
+                detectListener = "micClickListener"
                 micButton = findViewById<Button>(R.id.mic_button).apply {
                     setOnClickListener(micClickListener)
                 }
-            }else if(detectListener.equals("micClickListenerMessage")){
-                detectListener="micClickListenerSubject"
+            } else if (detectListener.equals("micClickListenerMessage")) {
+                detectListener = "micClickListenerSubject"
                 micButton = findViewById<Button>(R.id.mic_button).apply {
                     setOnClickListener(micClickListenerSubject)
                 }
-            }else if(detectListener.equals("sendClickListener")){
-                detectListener="micClickListenerMessage"
+            } else if (detectListener.equals("sendClickListener")) {
+                detectListener = "micClickListenerMessage"
                 micButton = findViewById<Button>(R.id.mic_button).apply {
                     setOnClickListener(micClickListenerMessage)
                 }
@@ -99,7 +98,7 @@ class MainActivity : AppCompatActivity()  {
     }
 
 
-    private val sendClickListener= View.OnClickListener {
+    private val sendClickListener = View.OnClickListener {
         val vibratorService = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         vibratorService.vibrate(500) // Using deprecated API because min sdk 21
         sendEmail()
@@ -120,13 +119,12 @@ class MainActivity : AppCompatActivity()  {
             micButton = findViewById<Button>(R.id.mic_button).apply {
                 setOnClickListener(micClickListenerSubject)
             }
-            detectListener="micClickListenerSubject"
+            detectListener = "micClickListenerSubject"
 
         }
 
 
     }
-
 
 
     private val micClickListenerSubject = View.OnClickListener {
@@ -145,7 +143,7 @@ class MainActivity : AppCompatActivity()  {
                 setOnClickListener(micClickListenerMessage)
             }
 
-            detectListener="micClickListenerMessage"
+            detectListener = "micClickListenerMessage"
 
         }
 
@@ -164,9 +162,10 @@ class MainActivity : AppCompatActivity()  {
             val vibratorService = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
             vibratorService.vibrate(100) // Using deprecated API because min sdk 21
             micButton = findViewById<Button>(R.id.mic_button).apply {
-                setOnClickListener(sendClickListener)}
+                setOnClickListener(sendClickListener)
+            }
 
-            detectListener="sendClickListener"
+            detectListener = "sendClickListener"
 
 
         }
@@ -245,17 +244,29 @@ class MainActivity : AppCompatActivity()  {
     }
 
     //private fun sendEmail( recipient: TextView,subject: TextView,message:TextView) {
-   private fun sendEmail() {
+    private fun sendEmail() {
         //Getting content for email
         val email = recipient.getText().toString().trim()
+
+// onClick of button perform this simplest code.
+        val emailPattern = Regex("[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+")
         val sub = subject.getText().toString().trim()
         val mes = message.getText().toString().trim()
 
-        //Creating SendMail object
-        val sm = SendMail(this, email, sub, mes)
 
-        //Executing sendmail to send email
-        sm.execute()
+        if (email.matches(emailPattern)) {
+
+            val sm = SendMail(this, email, sub, mes)
+
+            //Executing sendmail to send email
+            sm.execute()
+        } else {
+            Toast.makeText(applicationContext, "Invalid email address", Toast.LENGTH_SHORT).show()
+        }
+
+
+
+
     }
 
 
@@ -278,6 +289,9 @@ class MainActivity : AppCompatActivity()  {
     //  mIntent.setClassName(best.activityInfo.packageName, best.activityInfo.name)
     //startActivity(mIntent)
     //}
+
+
+
 
 
 
