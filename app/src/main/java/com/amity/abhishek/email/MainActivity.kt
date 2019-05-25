@@ -116,10 +116,17 @@ class MainActivity : AppCompatActivity() {
             speechRecognizerViewModel.startListening()
             val vibratorService = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
             vibratorService.vibrate(100) // Using deprecated API because min sdk 21
-            micButton = findViewById<Button>(R.id.mic_button).apply {
-                setOnClickListener(micClickListenerSubject)
+            if(detectListener.equals("emailInvalid")){
+                micButton = findViewById<Button>(R.id.mic_button).apply {
+                    setOnClickListener(sendClickListener)
+                }
+                detectListener="sendClickListener"
+            }else{
+                micButton = findViewById<Button>(R.id.mic_button).apply {
+                    setOnClickListener(micClickListenerSubject)}
+                    detectListener = "micClickListenerSubject"
             }
-            detectListener = "micClickListenerSubject"
+
 
         }
 
@@ -262,6 +269,10 @@ class MainActivity : AppCompatActivity() {
             sm.execute()
         } else {
             Toast.makeText(applicationContext, "Invalid email address", Toast.LENGTH_SHORT).show()
+            micButton = findViewById<Button>(R.id.mic_button).apply {
+                setOnClickListener(micClickListener)
+            }
+            detectListener="emailInvalid"
         }
 
 
