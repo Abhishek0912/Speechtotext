@@ -44,7 +44,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var micSubject: Button
     private lateinit var micMessage: Button
     private var detectListener: String = "micClickListener"
-    private val emailPattern = Regex("[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+")
 
 
     private lateinit var speechRecognizerViewModel: SpeechRecognizerViewModel
@@ -113,12 +112,10 @@ class MainActivity : AppCompatActivity() {
 
         if (speechRecognizerViewModel.isListening) {
             speechRecognizerViewModel.stopListening()
-
         } else {
             speechRecognizerViewModel.startListening()
             val vibratorService = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
             vibratorService.vibrate(100) // Using deprecated API because min sdk 21
-
             micButton = findViewById<Button>(R.id.mic_button).apply {
                 setOnClickListener(micClickListenerSubject)
             }
@@ -180,6 +177,8 @@ class MainActivity : AppCompatActivity() {
         speechRecognizerViewModel = ViewModelProviders.of(this).get(SpeechRecognizerViewModel::class.java)
         speechRecognizerViewModel.getViewState().observe(this, Observer<SpeechRecognizerViewModel.ViewState> { viewState ->
             render(viewState)
+
+
         })
 
     }
@@ -202,6 +201,7 @@ class MainActivity : AppCompatActivity() {
         if (uiOutput == null) return
         recipient.text = uiOutput.spokenText
         recipient.text = recipient.text.replace("\\s".toRegex(), "")
+
 
     }
 
@@ -249,12 +249,12 @@ class MainActivity : AppCompatActivity() {
         val email = recipient.getText().toString().trim()
 
 // onClick of button perform this simplest code.
-       // val emailPattern = Regex("[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+")
+        val emailPattern = Regex("[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+")
         val sub = subject.getText().toString().trim()
         val mes = message.getText().toString().trim()
 
 
-       if (email.matches(emailPattern)) {
+        if (email.matches(emailPattern)) {
 
             val sm = SendMail(this, email, sub, mes)
 
