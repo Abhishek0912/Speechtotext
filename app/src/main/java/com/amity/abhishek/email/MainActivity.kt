@@ -44,6 +44,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var micSubject: Button
     private lateinit var micMessage: Button
     private var detectListener: String = "micClickListener"
+    private val emailPattern = Regex("[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+")
 
 
     private lateinit var speechRecognizerViewModel: SpeechRecognizerViewModel
@@ -249,7 +250,7 @@ class MainActivity : AppCompatActivity() {
         val email = recipient.getText().toString().trim()
 
 // onClick of button perform this simplest code.
-        val emailPattern = Regex("[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+")
+        //val emailPattern = Regex("[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+")
         val sub = subject.getText().toString().trim()
         val mes = message.getText().toString().trim()
 
