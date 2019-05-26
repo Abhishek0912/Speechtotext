@@ -96,6 +96,7 @@ class MainActivity : AppCompatActivity() {
         })
 
 
+
     }
 
 
@@ -103,6 +104,21 @@ class MainActivity : AppCompatActivity() {
         val vibratorService = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         vibratorService.vibrate(500) // Using deprecated API because min sdk 21
         sendEmail()
+        if(!detectListener.equals("emailInvalid")) {
+        recipient.setText(null)
+        subject.setText(null)
+        message.setText(null)
+        val intent =Intent(this,MainActivity::class.java)
+        startActivity(intent)
+        reset()
+        }
+
+    }
+    private fun reset(){
+            setupSpeechViewModel()
+            setupSpeechViewSubject()
+            setupSpeechViewMessage()
+
     }
 
     private val micClickListener = View.OnClickListener {
@@ -165,7 +181,9 @@ class MainActivity : AppCompatActivity() {
 
         if (speechRecognizermessage.isListening) {
             speechRecognizermessage.stopListening()
-        } else {
+        } else {setupSpeechViewModel()
+            setupSpeechViewSubject()
+            setupSpeechViewMessage()
             speechRecognizermessage.startListening()
             val vibratorService = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
             vibratorService.vibrate(100) // Using deprecated API because min sdk 21
