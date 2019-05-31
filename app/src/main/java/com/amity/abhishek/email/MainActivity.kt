@@ -32,41 +32,31 @@ import java.io.UnsupportedEncodingException
 
 @Suppress("NAME_SHADOWING")
 class MainActivity : AppCompatActivity() {
-    private val REQUEST_RECORD_AUDIO_PERMISSION = 200
-    private val REQUEST_RECORD_AUDIO_SUBJECT_PERMISSION = 200
-    private val REQUEST_RECORD_AUDIO_MESSAGE_PERMISSION = 200
-    private val permissions = arrayOf(Manifest.permission.RECORD_AUDIO)
+
 
     private lateinit var cButton: Button
-    private lateinit var eButton: Button
+    private  var eButton: Button?=null
 
-    private lateinit var sendButton: Button
-    private lateinit var micSubject: Button
-    private lateinit var micMessage: Button
-    private var detectListener: String = "micClickListener"
-    private val emailPattern = Regex("[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+")
+
     private var speech: TextToSpeech? = null
 
 
-    private lateinit var speechRecognizerViewModel: SpeechRecognizerViewModel
-    private lateinit var speechRecognizersubject: SpeechRecognizerSubject
-    private lateinit var speechRecognizermessage: SpeechRecognizermessage
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         toSpeech()
-        var eButton = findViewById(R.id.ebutton) as Button
-        eButton.setOnClickListener {
+         eButton = findViewById(R.id.ebutton) as Button
+        eButton?.setOnClickListener {
             // Handler code here.
             val intent = Intent(this, emailpage::class.java);
-            startActivity(intent);
-            var cButton = findViewById(R.id.cbutton) as Button
-            cButton.setOnClickListener {
+            startActivity(intent)}
+             cButton = findViewById(R.id.cbutton) as Button
+            cButton?.setOnClickListener {
                 // Handler code here.
                 val intent = Intent(this, camera::class.java);
-                startActivity(intent);
-            }
+                startActivity(intent)
+
         }
     }
 

@@ -22,14 +22,14 @@ class emailpage : AppCompatActivity() {
     private val REQUEST_RECORD_AUDIO_MESSAGE_PERMISSION = 200
     private val permissions = arrayOf(Manifest.permission.RECORD_AUDIO)
 
-    private lateinit var recipient: TextView
-    private lateinit var subject: TextView
-    private lateinit var message: TextView
-    private lateinit var micButton: Button
+    private  var recipient: TextView?=null
+    private  var subject: TextView?=null
+    private  var message: TextView?=null
+    private  var micButton: Button?=null
 
     private lateinit var sendButton: Button
-    private lateinit var micSubject: Button
-    private lateinit var micMessage: Button
+    private  var micSubject: Button?=null
+    private  var micMessage: Button?=null
     private var detectListener: String = "micClickListener"
     private val emailPattern = Regex("[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+")
 
@@ -40,7 +40,7 @@ class emailpage : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_emailpage)
 
         // sendButton = findViewById<Button>(R.id.sendEmailBtn).apply {
         //setOnClickListener(sendClickListener)}
@@ -48,7 +48,7 @@ class emailpage : AppCompatActivity() {
         recipient = findViewById(R.id.recipientEt)
         subject = findViewById(R.id.subjectEt)
         message = findViewById(R.id.messageEt)
-        micButton = findViewById<Button>(R.id.mic_button).apply {
+        micButton = findViewById<Button>(R.id.mic_button)?.apply {
             setOnClickListener(micClickListener)
         }
 
@@ -61,7 +61,7 @@ class emailpage : AppCompatActivity() {
         setupSpeechViewSubject()
         setupSpeechViewMessage()
 
-        micButton.setOnLongClickListener(View.OnLongClickListener {
+        micButton?.setOnLongClickListener(View.OnLongClickListener {
             if (detectListener.equals("micClickListenerSubject")) {
                 detectListener = "micClickListener"
                 micButton = findViewById<Button>(R.id.mic_button).apply {
@@ -92,9 +92,9 @@ class emailpage : AppCompatActivity() {
         vibratorService.vibrate(500) // Using deprecated API because min sdk 21
         sendEmail()
         if(!detectListener.equals("emailInvalid")) {
-            recipient.setText(null)
-            subject.setText(null)
-            message.setText(null)
+            recipient?.setText(null)
+            subject?.setText(null)
+            message?.setText(null)
             val intent = Intent(this,MainActivity::class.java)
             startActivity(intent)
             reset()
@@ -212,22 +212,22 @@ class emailpage : AppCompatActivity() {
 
     private fun render(uiOutput: SpeechRecognizerViewModel.ViewState?) {
         if (uiOutput == null) return
-        recipient.text = uiOutput.spokenText
-        recipient.text = recipient.text.replace("\\s".toRegex(), "")
+        recipient?.text = uiOutput.spokenText
+        recipient?.text = recipient?.text?.replace("\\s".toRegex(), "")
 
 
     }
 
     private fun subject(uiOutput: SpeechRecognizerSubject.ViewState?) {
         if (uiOutput == null) return
-        subject.text = uiOutput.spokenText
+        subject?.text = uiOutput.spokenText
 
 
     }
 
     private fun message(uiOutput: SpeechRecognizermessage.ViewState?) {
         if (uiOutput == null) return
-        message.text = uiOutput.spokenText
+        message?.text = uiOutput.spokenText
 
 
     }
@@ -240,31 +240,31 @@ class emailpage : AppCompatActivity() {
         }
 
         if (speechRecognizerViewModel.permissionToRecordAudio) {
-            micButton.performClick()
+            micButton?.performClick()
         }
         if (requestCode == REQUEST_RECORD_AUDIO_SUBJECT_PERMISSION) {
             speechRecognizersubject.permissionToRecordAudio = grantResults[0] == PackageManager.PERMISSION_GRANTED
         }
         if (speechRecognizersubject.permissionToRecordAudio) {
-            micSubject.performClick()
+            micSubject?.performClick()
         }
         if (requestCode == REQUEST_RECORD_AUDIO_MESSAGE_PERMISSION) {
             speechRecognizermessage.permissionToRecordAudio = grantResults[0] == PackageManager.PERMISSION_GRANTED
         }
         if (speechRecognizermessage.permissionToRecordAudio) {
-            micMessage.performClick()
+            micMessage?.performClick()
         }
     }
 
     //private fun sendEmail( recipient: TextView,subject: TextView,message:TextView) {
     private fun sendEmail() {
         //Getting content for email
-        val email = recipient.getText().toString().trim()
+        val email = recipient?.getText().toString().trim()
 
 // onClick of button perform this simplest code.
         //val emailPattern = Regex("[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+")
-        val sub = subject.getText().toString().trim()
-        val mes = message.getText().toString().trim()
+        val sub = subject?.getText().toString().trim()
+        val mes = message?.getText().toString().trim()
 
 
         if (email.matches(emailPattern)) {
