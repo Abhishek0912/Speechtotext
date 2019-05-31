@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp"
+    tools:context=".MainActivity">
+    <TextView
+        android:id="@+id/recipientEt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Recipient email(s)"
+
+        android:padding="10dp"
+        />
+
+
+    <TextView
+        android:id="@+id/subjectEt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:hint="Subject"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp"
+
+        android:padding="10dp"
+        />
+
+
+    <TextView
+        android:id="@+id/messageEt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:gravity="start"
+        android:hint="Enter message here..."
+
+        android:minHeight="150dp"
+        android:padding="10dp"
+        />
+
+    <!--Button:   Launch existing email clients to send email-->
+
+    <Button
+        android:id="@+id/mic_button"
+        android:layout_width="match_parent"
+        android:layout_height="139dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:text="Tap on Start to speak" />
+
+
+
+
+</LinearLayout>
