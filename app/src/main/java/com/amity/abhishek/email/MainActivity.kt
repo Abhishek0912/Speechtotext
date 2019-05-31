@@ -34,11 +34,16 @@ import java.io.UnsupportedEncodingException
 class MainActivity : AppCompatActivity() {
 
 
-    private lateinit var cButton: Button
-    private  var eButton: Button?=null
+    private val REQUEST_RECORD_AUDIO_PERMISSION = 200
+    private val permissions = arrayOf(Manifest.permission.RECORD_AUDIO)
+
+    private lateinit var textField: TextView
+    private lateinit var Button: Button
 
 
     private var speech: TextToSpeech? = null
+    private lateinit var speechRecognizerViewModel: MainSpeechRecognizerViewModel
+
 
 
 
@@ -46,19 +51,16 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         toSpeech()
-         eButton = findViewById(R.id.ebutton) as Button
-        eButton?.setOnClickListener {
-            // Handler code here.
-            val intent = Intent(this, emailpage::class.java);
-            startActivity(intent)}
-             cButton = findViewById(R.id.cbutton) as Button
-            cButton?.setOnClickListener {
-                // Handler code here.
-                val intent = Intent(this, camera::class.java);
-                startActivity(intent)
-
+        textField = findViewById(R.id.text_field)
+        Button = findViewById<Button>(R.id.button).apply {
+            setOnClickListener(ClickListener)
         }
+        setupSpeechViewModel()
+
     }
+
+
+
 
     private fun toSpeech() {
 
@@ -71,7 +73,7 @@ class MainActivity : AppCompatActivity() {
                     } else {
                         speech?.setPitch(1.0f)
                         speech?.setSpeechRate(1.0f)
-                        speech?.speak("for camera tap on upper half screen and for email tap on lower half screen", TextToSpeech.QUEUE_FLUSH, null)
+                        speech?.speak("What do you want Email or Scanner", TextToSpeech.QUEUE_FLUSH, null)
                     }
                 } else {
                     Log.e("TTS", "Initialization failed")
@@ -79,6 +81,53 @@ class MainActivity : AppCompatActivity() {
             })
         } catch (e: UnsupportedEncodingException) {
             e.printStackTrace()
+        }
+    }
+    private val ClickListener = View.OnClickListener {
+        if (!speechRecognizerViewModel.permissionToRecordAudio) {
+            ActivityCompat.requestPermissions(this, permissions, REQUEST_RECORD_AUDIO_PERMISSION)
+            return@OnClickListener
+        }
+
+        if (speechRecognizerViewModel.isListening) {
+            speechRecognizerViewModel.stopListening()
+        } else {
+            speechRecognizerViewModel.startListening()
+        }
+    }
+
+    private fun setupSpeechViewModel() {
+        speechRecognizerViewModel = ViewModelProviders.of(this).get(MainSpeechRecognizerViewModel::class.java)
+        speechRecognizerViewModel.getViewState().observe(this, Observer<MainSpeechRecognizerViewModel.ViewState> { viewState ->
+            render(viewState)
+        })
+    }
+
+    private fun render(uiOutput: MainSpeechRecognizerViewModel.ViewState?) {
+        if (uiOutput == null) return
+
+        textField.text = uiOutput.spokenText
+        if(textField.text=="email"){
+            val intent = Intent(this, emailpage::class.java);
+            startActivity(intent) }
+        else if (textField.text=="scanner"){
+            val intent = Intent(this, camera::class.java);
+             startActivity(intent)
+        }
+
+
+    }
+
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if (requestCode == REQUEST_RECORD_AUDIO_PERMISSION) {
+            speechRecognizerViewModel.permissionToRecordAudio = grantResults[0] == PackageManager.PERMISSION_GRANTED
+        }
+
+        if (speechRecognizerViewModel.permissionToRecordAudio) {
+            Button.performClick()
         }
     }
 
